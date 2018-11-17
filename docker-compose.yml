@@ -2,6 +2,31 @@ version: '2.1'
 
 services:
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "rabbitmqctl", "status"]
+            interval: 3s
+            timeout: 20s
+            retries: 5
+
+    redis:
+        image: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 3s
+            timeout: 20s
+            retries: 5
+
     producer:
         build:
             context: ./producer
@@ -11,15 +36,15 @@ services:
             - app-network
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
-        links:
-            - rabbitmq
-
-    rabbitmq:
-        image: rabbitmq:3.7.4
-        ports:
-            - "5672:5672"
-        networks:
-            - app-network
+            - QUEUE_NAME=transaction_queue
+            - REDIS_URL=redis://redis
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
+        # deploy:
+        #     replicas: 2
 
 networks:
     app-network:

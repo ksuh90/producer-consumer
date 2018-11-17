@@ -1,0 +1,14 @@
+{
+  "name": "producer",
+  "version": "1.0.0",
+  "description": "ze producer",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "author": "K Suh",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.2"
+  }
+}

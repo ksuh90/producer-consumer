@@ -37,17 +37,16 @@ const sleep = function(ms) {
 /**
  * The producer
  */
-const producer = async function() {
+const produce = async function() {
     const connection = await amqp.connect(process.env.MESSAGE_QUEUE);
     const channel = await connection.createChannel();
-
-    var ok = await channel.assertQueue(process.env.QUEUE_NAME, { durable: false });
+    await channel.assertQueue(process.env.QUEUE_NAME, { durable: false });
     
     while (1) {
         const n = rand(1, 6);
         const payload = createTransaction();
         
-        await channel.sendToQueue(process.env.QUEUE_NAME, new Buffer(payload.toString()));
+        await channel.sendToQueue(process.env.QUEUE_NAME, Buffer.from(JSON.stringify(payload)));
         console.log(' [x] Interval %s seconds', n.toString());
         console.log(payload);
         await sleep(n * 1000);
@@ -56,4 +55,4 @@ const producer = async function() {
     channel.close();
 }
 
-producer();
+produce();

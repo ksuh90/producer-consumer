@@ -45,6 +45,23 @@ services:
                 condition: service_healthy
         # deploy:
         #     replicas: 2
+    
+    consumer:
+        build:
+            context: ./consumer
+        volumes:
+            - consumer-sync:/opt/app:nocopy
+        networks:
+            - app-network
+        environment:
+            - MESSAGE_QUEUE=amqp://rabbitmq
+            - QUEUE_NAME=transaction_queue
+            - REDIS_URL=redis://redis
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
 
 networks:
     app-network:
@@ -52,4 +69,6 @@ networks:
 
 volumes:
     producer-sync:
+        external: true
+    consumer-sync:
         external: true

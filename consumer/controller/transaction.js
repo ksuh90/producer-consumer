@@ -73,6 +73,7 @@ const handler = async function(transObject) {
         await getNewTransId()
     );
 
+    // TODO
     /*if (await applyToAccount(trans.userid, trans.type, trans.amount)) {
         await insert(trans);
     }*/

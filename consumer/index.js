@@ -1,5 +1,5 @@
 const amqp = require('amqplib');
-const controller = require('./controller/transaction');
+const { handler } = require('./controller/transaction');
 
 const sleep = function(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -22,7 +22,7 @@ const consume = async function() {
         channel.ack(message);
 
         console.log(content);
-        await controller(JSON.parse(content));
+        await handler(JSON.parse(content));
         //let newId = await getNewTransId();
         //console.log(newId);
         //winston.info(`${task.message} received!`);

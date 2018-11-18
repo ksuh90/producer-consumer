@@ -23,7 +23,7 @@ const createTransaction = function() {
     const amount = rand(1, 5001);
 
     return {
-        producer_id: os.hostname(),
+        producerId: os.hostname(),
         userid: users[Math.floor(Math.random() * users.length)],
         type: types[Math.floor(Math.random() * types.length)],
         amount: amount

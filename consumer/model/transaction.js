@@ -10,6 +10,18 @@ class Transaction {
         this._id = id || null;
     }
 
+    get producerId() {
+        return this._producerId;
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    get userid() {
+        return this._userid;
+    }
+
     get amount() {
         return this._amount;
     }
@@ -24,7 +36,7 @@ class Transaction {
 
     asJSON() {
         let ret = {
-            producerId: this._producerId,
+            producer_id: this._producerId,
             type: this._type,
             userid: this._userid,
             amount: this._amount

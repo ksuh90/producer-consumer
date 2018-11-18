@@ -1,3 +1,4 @@
+const userModel = require('../model/user');
 const transactionModel = require('../model/transaction');
 const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL);
@@ -45,21 +46,22 @@ const insert = async function(trans) {
  */
 const applyToAccount = async function(userid, type, amount) {
     const key = 'user:' + userid;
-    let balance = parseFloat(await hgetAsync(key, 'balance'));
+    let user = new userModel(
+        userid,
+        parseFloat(await hgetAsync(key, 'balance'))
+    ); 
+
     switch (type) {
         case 'payment':
-            balance -= amount;
+            user.subtractAmount(amount);
             break;
         case 'topup':
-            balance += amount;
+            user.addAmount(amount);
             break;
         default:
             break;
     }
-
-    return await hsetAsync(
-        key, 'balance', parseFloat(balance.toFixed(2))
-    );
+    return await hsetAsync(key, 'balance', user.balance);
 }
 
 const handler = async function(transObject) {
@@ -78,4 +80,6 @@ const handler = async function(transObject) {
     console.log(trans.asJSON());
 }
 
-module.exports = handler;
+module.exports = {
+    handler: handler,
+};

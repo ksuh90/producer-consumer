@@ -6,7 +6,7 @@ class Transaction {
         this._producerId = producerId;
         this._type = type;
         this._userid = userid;
-        this._amount = parseInt(amount);
+        this._amount = parseFloat(amount);
         this._id = id || null;
     }
 

@@ -23,8 +23,6 @@ const consume = async function() {
 
         console.log(content);
         await handler(JSON.parse(content));
-        //let newId = await getNewTransId();
-        //console.log(newId);
         //winston.info(`${task.message} received!`);
     });
 }

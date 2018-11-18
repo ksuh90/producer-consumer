@@ -53,6 +53,8 @@ services:
             - consumer-sync:/opt/app:nocopy
         networks:
             - app-network
+        ports:
+            - "8080:8080"
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue

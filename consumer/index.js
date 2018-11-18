@@ -1,21 +1,8 @@
 const amqp = require('amqplib');
-const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URL);
-const { promisify } = require('util');
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const setAsync = promisify(redisClient.set).bind(redisClient);
-
+const controller = require('./controller/transaction');
 
 const sleep = function(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-const getNewTransId = async function() {
-    const uidKey = 'transaction:id';
-    let uid = await getAsync(uidKey);
-    const newId = uid ? parseInt(uid) + 1 : 1;
-    await setAsync(uidKey, newId);
-    return newId;
 }
 
 /**
@@ -35,8 +22,9 @@ const consume = async function() {
         channel.ack(message);
 
         console.log(content);
-        let newId = await getNewTransId();
-        console.log(newId);
+        await controller(JSON.parse(content));
+        //let newId = await getNewTransId();
+        //console.log(newId);
         //winston.info(`${task.message} received!`);
     });
 }

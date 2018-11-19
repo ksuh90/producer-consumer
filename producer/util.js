@@ -31,7 +31,7 @@ const sleep = function(ms) {
 const createTransaction = function() {
     const types = ['payment', 'topup'];
     const users = [1, 2, 3];
-    const amount = randAmount(1, 5001);
+    const amount = randAmount(1, 1001);
 
     return {
         producer_id: os.hostname(),

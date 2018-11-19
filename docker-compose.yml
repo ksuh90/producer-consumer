@@ -34,13 +34,10 @@ services:
             - producer-sync:/opt/app:nocopy
         networks:
             - app-network
-        ports:
-            - "8125:8125"
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue
             - REDIS_URL=redis://redis
-            - PRODUCER_MODE=0
         depends_on:
             rabbitmq:
                 condition: service_healthy

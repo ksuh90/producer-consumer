@@ -49,7 +49,7 @@
         var tbody = document.getElementById('table-body');
         var socket = io.connect('http://localhost:8080');
         socket.on('transaction', function(data) {
-            console.log(data);
+            //console.log(data);
             var tr = document.createElement('tr');
             tr.appendChild(createTd(data['id']));
             tr.appendChild(createTd(data['producer_id']));

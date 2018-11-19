@@ -15,6 +15,12 @@
     <div></div>
     <div>
         <h2>Transactions</h2>
+        <div style="margin-bottom: 20px;">
+            <span>
+                <button id="producer-on">producer ON</button>
+                <button id="producer-off">producer OFF</button>
+            </span>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -42,17 +48,28 @@
         }
         var tbody = document.getElementById('table-body');
         var socket = io.connect('http://localhost:8080');
-            socket.on('transaction', function(data) {
-                console.log(data);
-                var tr = document.createElement('tr');
-                tr.appendChild(createTd(data['id']));
-                tr.appendChild(createTd(data['producer_id']));
-                tr.appendChild(createTd(data['userid']));
-                tr.appendChild(createTd(data['type']));
-                tr.appendChild(createTd(data['amount']));
-                tr.appendChild(createTd(data['balance']));
-                tbody.prepend(tr);     
-            });
+        socket.on('transaction', function(data) {
+            console.log(data);
+            var tr = document.createElement('tr');
+            tr.appendChild(createTd(data['id']));
+            tr.appendChild(createTd(data['producer_id']));
+            tr.appendChild(createTd(data['userid']));
+            tr.appendChild(createTd(data['type']));
+            tr.appendChild(createTd(data['amount']));
+            tr.appendChild(createTd(data['balance']));
+            tbody.prepend(tr);     
+        });
+
+        document.getElementById('producer-on').onclick = function(){
+            httpRequest = new XMLHttpRequest();
+            httpRequest.open('GET', '/on');
+            httpRequest.send();
+        };
+        document.getElementById('producer-off').onclick = function(){
+            httpRequest = new XMLHttpRequest();
+            httpRequest.open('GET', '/off');
+            httpRequest.send();
+        };
     </script>
 </body>
 </html>

@@ -20,8 +20,6 @@ RUN cd /tmp/app/ && npm install
 WORKDIR $PROJECT_ROOT
 
 COPY index.js /opt/app/
-COPY producer.js /opt/app/
-COPY server.js /opt/app/
 COPY util.js /opt/app/
 
 COPY bin /opt/bin

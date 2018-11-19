@@ -1,32 +1,39 @@
-const eventEmitter = require('events');
-const producer = require('./producer');
-const server = require('./server');
+const amqp = require('amqplib');
+const redis = require('redis');
+const redisClient = redis.createClient(process.env.REDIS_URL);
+const { promisify } = require('util');
+const getAsync = promisify(redisClient.get).bind(redisClient);
+const { randInterval, createTransaction, sleep } = require('./util');
 
-// The event emitter for toggling producer.
-const ee = new eventEmitter();
+const createChannel = async function(connection) {
+    const channel = await connection.createChannel();
+    await channel.assertQueue(process.env.QUEUE_NAME, { durable: false });
+    return channel;
+}
 
-// Event listener for toggling the producer on/off
-ee.on('toggle', function (mode) {
-    let globalMode = parseInt(process.env.PRODUCER_MODE);
-    switch(mode) {
-        case 1:
-            console.log('toggle ON');
-            if (!globalMode) {
-                process.env.PRODUCER_MODE = 1;
-                producer.produce();
+const produce = async function() {
+    const connection = await amqp.connect(process.env.MESSAGE_QUEUE);
+    let channel = await createChannel(connection);
+    while (1) {
+        if (parseInt(await getAsync('producer_mode'))) {
+            if (!channel) {
+                channel = await createChannel(connection);
             }
-            break;
-        default:
-            console.log('toggle OFF');
-            if (globalMode) {
-                process.env.PRODUCER_MODE = 0;
+            const n = randInterval(1, 6);
+            const payload = createTransaction();
+            await channel.sendToQueue(
+                process.env.QUEUE_NAME,
+                Buffer.from(JSON.stringify(payload))
+            );
+            
+            await sleep(n * 1000);
+        } else {
+            if (channel) {
+                channel.close();
             }
-            break;
+            channel = null;
+        }
     }
-});
+}
 
-const httpServer = server(ee);
-httpServer.listen(8125);
-
-// Start producing
-producer.produce();
+produce();

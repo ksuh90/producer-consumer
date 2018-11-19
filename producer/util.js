@@ -30,7 +30,7 @@ const sleep = function(ms) {
  */
 const createTransaction = function() {
     const types = ['payment', 'topup'];
-    const users = [1, 2, 3];
+    const users = ['tony', 'hulk', 'groot'];
     const amount = randAmount(1, 1001);
 
     return {

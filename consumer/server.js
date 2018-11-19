@@ -1,13 +1,14 @@
 const http = require('http');
 const fs = require('fs');
+const redis = require('redis');
+const redisClient = redis.createClient(process.env.REDIS_URL);
+const { promisify } = require('util');
+const setAsync = promisify(redisClient.set).bind(redisClient);
 
-const server = http.createServer(function (request, response) {
+const server = http.createServer(async function (request, response) {
     //console.log('request ', request.url);
 
-    var filePath = '.' + request.url;
-    if (filePath == './') {
-        
-    }
+    const producerToggleKey = 'producer_mode';
 
     switch(request.url.substring(1)) {
         case '':
@@ -18,12 +19,14 @@ const server = http.createServer(function (request, response) {
             });
             break;
         case 'on':
-            http.get('http://neat-back_producer_1:8125/on');
+            console.log('toggle producers ON');
+            await setAsync(producerToggleKey, 1);
             response.writeHead(200);
             response.end();
             break;
         case 'off':
-            http.get('http://neat-back_producer_1:8125/off');
+            console.log('toggle producers OFF');
+            await setAsync(producerToggleKey, 0);
             response.writeHead(200);
             response.end();
             break;

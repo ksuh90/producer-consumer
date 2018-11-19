@@ -23,7 +23,7 @@
                     <th>userid</th>
                     <th>type</th>
                     <th>amount</th>
-                    <!-- <th>side</th> -->
+                    <!-- <th>side</th>  TODO -->
                     <th>balance</th>
                 </tr>
             </thead>
@@ -31,8 +31,6 @@
             </tbody>
         </table>
     </div>
-
-    <ul id="aaa"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
@@ -52,7 +50,7 @@
                 tr.appendChild(createTd(data['userid']));
                 tr.appendChild(createTd(data['type']));
                 tr.appendChild(createTd(data['amount']));
-                tr.appendChild(createTd('todo'));
+                tr.appendChild(createTd('todo')); // TODO
                 tbody.prepend(tr);     
             });
     </script>

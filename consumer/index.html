@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Consumer UI</title>
+    <style type="text/css">
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div></div>
+    <div>
+        <h2>Transactions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>transaction_id</th>
+                    <th>producer_id</th>
+                    <th>userid</th>
+                    <th>type</th>
+                    <th>amount</th>
+                    <!-- <th>side</th> -->
+                    <th>balance</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+            </tbody>
+        </table>
+    </div>
+
+    <ul id="aaa"></ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        function createTd(text) {
+            var td = document.createElement('td');  
+            var text = document.createTextNode(text);
+            td.appendChild(text);
+            return td;
+        }
+        var tbody = document.getElementById('table-body');
+        var socket = io.connect('http://localhost:8080');
+            socket.on('transaction', function(data) {
+                console.log(data);
+                var tr = document.createElement('tr');
+                tr.appendChild(createTd(data['id']));
+                tr.appendChild(createTd(data['producer_id']));
+                tr.appendChild(createTd(data['userid']));
+                tr.appendChild(createTd(data['type']));
+                tr.appendChild(createTd(data['amount']));
+                tr.appendChild(createTd('todo'));
+                tbody.appendChild(tr);     
+            });
+    </script>
+</body>
+</html>

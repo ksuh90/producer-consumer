@@ -43,7 +43,7 @@ class Transaction {
         let user = new userModel(
             this._transModel.userid,
             parseFloat(await hgetAsync(key, 'balance'))
-        ); 
+        );
 
         switch (this._transModel.type) {
             case 'payment':
@@ -55,7 +55,9 @@ class Transaction {
             default:
                 break;
         }
-        return await hsetAsync(key, 'balance', user.balance);
+
+        await hsetAsync(key, 'balance', user.balance);
+        return user.balance;
     }
 
     /**
@@ -76,13 +78,9 @@ class Transaction {
 
     async execute() {
         this._transModel.id = await this.getNewTransId();
-        // TODO
-        /*if (await this.applyToAccount()) {
-            await this.insert();
-        }*/
-
-        console.log(this._transModel.asJSON());
-        return this._transModel.asJSON();
+        const newBalance = await this.applyToAccount();
+        await this.insert();
+        return Object.assign({}, this._transModel.asJSON(), {'balance': newBalance});
     }
 }
 

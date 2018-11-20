@@ -20,6 +20,7 @@ describe('model/transaction', function() {
         assert.equal(model.amount, 100.50);
         assert.equal(model.id, '111');
         assert.deepEqual(model.asJSON(), {
+            doc_type: 'transaction',
             timestamp: '2018-11-20T21:18:00.00Z',
             producer_id: '123abc',
             type: 'payment',

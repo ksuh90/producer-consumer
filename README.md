@@ -3,7 +3,7 @@
 ## How to run
 1. Clone the repository 
     ```
-    $ git clone https://ksuh90@bitbucket.org/ksuh90/producer-consumer.git
+    $ git clone https://github.com/ksuh90/producer-consumer.git
     ```
 2. From the root of the repository, run ```sh start.sh```
 3. Once all the containers are running, initialize the database with ```sh init-db.sh```

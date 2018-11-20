@@ -14,7 +14,7 @@ Prerequisite: Docker, docker-compsoe
 - Consumer UI is available at http://localhost:8080
 - Producers ON: http://localhost:8080/on
 - Producers OFF: http://localhost:8080/off
-- Database UI (user: admin, pw: pass): http://localhost:5984/dashboard.html
+- Database dashboard (user: admin, pw: pass): http://localhost:5984/dashboard.html
 
 ## System flow
 - Three producers each generate transactions of random amount(1~1000) and random users(tony, hulk, groot).
@@ -39,4 +39,6 @@ Cloudant is used as the database. Cloudant is a fork of Apache's CouchDB. It is 
 Having multiple producers creating transactions simultaneously, it made sense going with a non-sequential structure for storing transactions in case of concurrent inserts. When a document(in our case, transaction data) is inserted to Cloudant, without a specified id, it is assigned a UUID instead of a sequential id, which eliminates the overhead of a queue in the database(e.g. Mysql).
 
 #### MapReduce views for calculating balance
-CouchDB contructs views via map-reduce functions which, for this assignment, is used to build an index for retrieving user balances. The view uses a built-in reduce function for calculating the sum of all transactions' amounts. Whenever we need to inquire the balance for a given user, we simply pass the userid when querying the view. It may seem plausible to have an entry for every user with a "balance" field. But when transactions are inserted concurrently, there is a high chance of error when updating the "balance" field. However, there are some limitations to this as well. When transactions are being added with a short time interval, as the size of the index grows, querying the accurate balance on the fly is quite challenging while the index is being updated in the background. Cloudant offers parameters for stale, after-update, etc, which have their own tradeoffs between accuracy and performance.
+CouchDB contructs views via map-reduce functions which, for this assignment, is used to build an index for retrieving user balances. The view uses a built-in reduce function for calculating the sum of all transactions' amounts. Whenever we need to inquire the balance for a given user, we simply pass the userid when querying the view. Try ```http://localhost:5984/dev/_design/views/_view/balance_by_user?key="tony"```.
+
+It may seem plausible to have an entry for every user with a "balance" field. But when transactions are inserted concurrently, there is a high chance of error when updating the "balance" field. However, there are some limitations to this as well. When transactions are being added with a short time interval, as the size of the index grows, querying the accurate balance on the fly is quite challenging while the index is being updated in the background. Cloudant offers parameters for stale, after-update, etc, which have their own tradeoffs between accuracy and performance.

@@ -1,11 +1,7 @@
 const amqp = require('amqplib');
-const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URL);
-const { promisify } = require('util');
-const getAsync = promisify(redisClient.get).bind(redisClient);
-const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-const { randInterval, createTransaction, sleep, users } = require('./util');
-const logger = require('./trans-logger');
+const db = require('./lib/db');
+const { randInterval, createTransaction, sleep, users } = require('./lib/util');
+const logger = require('./lib/trans-logger');
 
 const createChannel = async function(connection) {
     const channel = await connection.createChannel();
@@ -17,13 +13,15 @@ const produce = async function() {
     const connection = await amqp.connect(process.env.MESSAGE_QUEUE);
     let channel = await createChannel(connection);
     while (1) {
-        if (parseInt(await getAsync('producer_mode'))) {
+        const config = await db.get('config');
+        if (config.mode) {
             // producer ON
             if (!channel) {
                 channel = await createChannel(connection);
             }
             const payload = createTransaction();
             const jsonStr = JSON.stringify(payload);
+            await db.insert(payload);
             await channel.sendToQueue(
                 process.env.QUEUE_NAME,
                 Buffer.from(jsonStr)
@@ -36,8 +34,11 @@ const produce = async function() {
                 channel.close();
                 console.log('[User balances]');
                 for (u in users) {
-                    const balance = await hgetAsync('user:'+users[u], 'balance');
-                    console.log('%s: %s', users[u], balance);
+                    // hard coding view url for now...
+                    const resp = await db.get('_design/views/_view/balance_by_user?key="' + users[u] + '"');
+                    if (resp.rows.length){
+                        console.log('%s: %s', users[u], resp.rows[0].value.sum.toFixed(2));
+                    }
                 }
             }
             channel = null;

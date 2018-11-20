@@ -1,11 +1,11 @@
 const amqp = require('amqplib');
-const winston = require('winston');
 const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL);
 const { promisify } = require('util');
 const getAsync = promisify(redisClient.get).bind(redisClient);
 const hgetAsync = promisify(redisClient.hget).bind(redisClient);
 const { randInterval, createTransaction, sleep, users } = require('./util');
+const logger = require('./trans-logger');
 
 const createChannel = async function(connection) {
     const channel = await connection.createChannel();
@@ -23,11 +23,12 @@ const produce = async function() {
                 channel = await createChannel(connection);
             }
             const payload = createTransaction();
+            const jsonStr = JSON.stringify(payload);
             await channel.sendToQueue(
                 process.env.QUEUE_NAME,
-                Buffer.from(JSON.stringify(payload))
+                Buffer.from(jsonStr)
             );
-            
+            logger.info(jsonStr);
             await sleep(randInterval(1, 6) * 1000);
         } else {
             // producer OFF

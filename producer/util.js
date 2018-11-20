@@ -1,5 +1,7 @@
 const os = require('os');
 
+const users = ['tony', 'hulk', 'groot'];
+
 /**
  * Generate a random amount between two integers
  * @param  {int} min
@@ -30,7 +32,6 @@ const sleep = function(ms) {
  */
 const createTransaction = function() {
     const types = ['payment', 'topup'];
-    const users = ['tony', 'hulk', 'groot'];
     const amount = randAmount(1, 1001);
 
     return {
@@ -46,4 +47,5 @@ module.exports = {
     randInterval: randInterval,
     sleep: sleep,
     createTransaction: createTransaction,
+    users: users
 };

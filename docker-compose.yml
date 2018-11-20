@@ -62,7 +62,7 @@ services:
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue
-            - CLOUDANT_URL=cloudant
+            - CLOUDANT_URL=http://cloudant
         depends_on:
             rabbitmq:
                 condition: service_healthy

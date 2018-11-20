@@ -22,6 +22,10 @@ const produce = async function() {
             if (!channel) {
                 channel = await createChannel(connection);
             }
+            await sleep(randInterval(
+                parseInt(process.env.INTERVAL_MIN),
+                parseInt(process.env.INTERVAL_MAX)
+            ) * 1000);
             const payload = createTransaction();
             const resp = await controller.insert(payload);
             const jsonStr = JSON.stringify(resp);
@@ -30,10 +34,6 @@ const produce = async function() {
                 Buffer.from(jsonStr)
             );
             logger.info(jsonStr);
-            await sleep(randInterval(
-                parseInt(process.env.INTERVAL_MIN),
-                parseInt(process.env.INTERVAL_MAX)
-            ) * 1000);
         } else {
             // producer OFF
             if (channel) {

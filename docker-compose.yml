@@ -15,14 +15,18 @@ services:
             timeout: 20s
             retries: 5
 
-    redis:
-        image: redis
+    cloudant:
+        container_name: cloudant
+        image: ibmcom/cloudant-developer:latest
+        hostname: developer.local
         ports:
-            - "6379:6379"
+            - "5984:80"
+        volumes:
+            - cloudant:/srv
         networks:
             - app-network
         healthcheck:
-            test: ["CMD", "redis-cli", "ping"]
+            test: ["CMD", "curl", "localhost:80"]
             interval: 3s
             timeout: 20s
             retries: 5
@@ -38,11 +42,11 @@ services:
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue
-            - REDIS_URL=redis://redis
+            - CLOUDANT_URL=http://cloudant
         depends_on:
             rabbitmq:
                 condition: service_healthy
-            redis:
+            cloudant:
                 condition: service_healthy
     
     consumer:
@@ -58,11 +62,11 @@ services:
         environment:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue
-            - REDIS_URL=redis://redis
+            - CLOUDANT_URL=cloudant
         depends_on:
             rabbitmq:
                 condition: service_healthy
-            redis:
+            cloudant:
                 condition: service_healthy
 
 networks:
@@ -74,3 +78,4 @@ volumes:
         external: true
     consumer-sync:
         external: true
+    cloudant:

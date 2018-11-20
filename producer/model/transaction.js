@@ -41,6 +41,7 @@ class Transaction {
 
     asJSON() {
         let ret = {
+            doc_type: 'transaction',
             timestamp: this._timestamp,
             producer_id: this._producerId,
             type: this._type,

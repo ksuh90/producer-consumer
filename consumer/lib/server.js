@@ -1,9 +1,6 @@
 const http = require('http');
 const fs = require('fs');
-const redis = require('redis');
-const redisClient = redis.createClient(process.env.REDIS_URL);
-const { promisify } = require('util');
-const setAsync = promisify(redisClient.set).bind(redisClient);
+const db = require('./db');
 
 const server = http.createServer(async function (request, response) {
     //console.log('request ', request.url);
@@ -20,13 +17,17 @@ const server = http.createServer(async function (request, response) {
             break;
         case 'on':
             console.log('toggle producers ON');
-            await setAsync(producerToggleKey, 1);
+            let resp1 = await db.get('config');
+            resp1.mode = 1;
+            await db.insert(resp1);
             response.writeHead(200);
             response.end();
             break;
         case 'off':
             console.log('toggle producers OFF');
-            await setAsync(producerToggleKey, 0);
+            let resp2 = await db.get('config');
+            resp2.mode = 0;
+            await db.insert(resp2);
             response.writeHead(200);
             response.end();
             break;

@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # Install root level node packages
 npm install

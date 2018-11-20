@@ -41,6 +41,8 @@ services:
             - MESSAGE_QUEUE=amqp://rabbitmq
             - QUEUE_NAME=transaction_queue
             - CLOUDANT_URL=http://cloudant
+            - INTERVAL_MIN=5
+            - INTERVAL_MAX=10
         depends_on:
             rabbitmq:
                 condition: service_healthy

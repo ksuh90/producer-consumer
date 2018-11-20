@@ -19,8 +19,11 @@ RUN cd /tmp/app/ && npm install
 
 WORKDIR $PROJECT_ROOT
 
+COPY app.json /opt/app/
 COPY index.js /opt/app/
 COPY lib /opt/app/lib
+COPY controller /opt/app/controller
+COPY model /opt/app/model
 
 COPY bin /opt/bin
 

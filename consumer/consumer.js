@@ -1,5 +1,6 @@
 const amqp = require('amqplib');
 const transController = require('./controller/transaction');
+const logger = require('./trans-logger');
 
 const consume = async function(eventEmitter) {
     const connection = await amqp.connect(process.env.MESSAGE_QUEUE);
@@ -14,7 +15,7 @@ const consume = async function(eventEmitter) {
         const data = JSON.parse(message.content.toString());
         const controller = new transController(data);
         const transaction = await controller.execute(data);
-        console.log(transaction);
+        logger.info(JSON.stringify(transaction));
         eventEmitter.emit('transaction', transaction);
     });
 }

@@ -4,6 +4,7 @@ const transModel = require('../../model/transaction');
 
 describe('model/transaction', function() {
     let model = new transModel(
+        '2018-11-20T21:18:00.00Z',
         '123abc',
         'payment',
         'foo',
@@ -12,12 +13,14 @@ describe('model/transaction', function() {
     );
 
     it ('should create a transaction model', function() {
+        assert.equal(model.timestamp, '2018-11-20T21:18:00.00Z');
         assert.equal(model.producerId, '123abc');
         assert.equal(model.type, 'payment');
         assert.equal(model.userid, 'foo');
         assert.equal(model.amount, 100.50);
         assert.equal(model.id, '111');
         assert.deepEqual(model.asJSON(), {
+            timestamp: '2018-11-20T21:18:00.00Z',
             producer_id: '123abc',
             type: 'payment',
             userid: 'foo',

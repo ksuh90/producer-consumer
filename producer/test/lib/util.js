@@ -1,8 +1,8 @@
 const chai = require('chai');
 const assert = chai.assert;
-const { randAmount, randInterval, createTransaction } = require('../util');
+const { randAmount, randInterval, createTransaction } = require('../../lib/util');
 
-describe('util.js', function() {
+describe('lib/util', function() {
     describe('randAmount', function() {
         it('should be a float', function() {
             const n = randAmount(1, 10);
@@ -31,6 +31,10 @@ describe('util.js', function() {
 
     describe('createTransaction', function() {
         const trans = createTransaction();
+        it('should have timestamp', function() {
+            assert.property(trans, 'timestamp');
+        });
+
         it('should have producer_id', function() {
             assert.property(trans, 'producer_id');
         });

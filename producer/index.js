@@ -3,7 +3,8 @@ const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL);
 const { promisify } = require('util');
 const getAsync = promisify(redisClient.get).bind(redisClient);
-const { randInterval, createTransaction, sleep } = require('./util');
+const hgetAsync = promisify(redisClient.hget).bind(redisClient);
+const { randInterval, createTransaction, sleep, users } = require('./util');
 
 const createChannel = async function(connection) {
     const channel = await connection.createChannel();
@@ -30,6 +31,11 @@ const produce = async function() {
         } else {
             if (channel) {
                 channel.close();
+                console.log('[User balances]');
+                for (u in users) {
+                    const balance = await hgetAsync('user:'+users[u], 'balance');
+                    console.log('%s: %s', users[u], balance);
+                }
             }
             channel = null;
         }

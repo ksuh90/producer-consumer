@@ -25,6 +25,7 @@
             <thead>
                 <tr>
                     <th>transaction_id</th>
+                    <th>timestamp</th>
                     <th>producer_id</th>
                     <th>userid</th>
                     <th>side</th>
@@ -38,6 +39,7 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
+
     <script type="text/javascript">
         function createTd(text) {
             var td = document.createElement('td');  
@@ -51,6 +53,7 @@
             //console.log(data);
             var tr = document.createElement('tr');
             tr.appendChild(createTd(data['id']));
+            tr.appendChild(createTd(data['timestamp']));
             tr.appendChild(createTd(data['producer_id']));
             tr.appendChild(createTd(data['userid']));
             tr.appendChild(createTd(data['type']));

@@ -2,12 +2,17 @@
  * Describes a transaction model
  */
 class Transaction {
-    constructor(producerId, type, userid, amount, id) {
+    constructor(t, producerId, type, userid, amount, id) {
+        this._timestamp = t;
         this._producerId = producerId;
         this._type = type;
         this._userid = userid;
         this._amount = parseFloat(amount);
         this._id = id || null;
+    }
+
+    get timestamp() {
+        return this._timestamp;
     }
 
     get producerId() {
@@ -36,6 +41,7 @@ class Transaction {
 
     asJSON() {
         let ret = {
+            timestamp: this._timestamp,
             producer_id: this._producerId,
             type: this._type,
             userid: this._userid,

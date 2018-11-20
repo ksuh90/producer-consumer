@@ -35,6 +35,7 @@ const createTransaction = function() {
     const amount = randAmount(1, 1001);
 
     return {
+        timestamp: (new Date).toISOString(),
         producer_id: os.hostname(),
         userid: users[Math.floor(Math.random() * users.length)],
         type: types[Math.floor(Math.random() * types.length)],

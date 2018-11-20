@@ -16,6 +16,7 @@ const hmsetAsync = promisify(redisClient.hmset).bind(redisClient);
 class Transaction {
     constructor(transObject) {
         this._transModel = new transactionModel(
+            transObject.timestamp,
             transObject.producer_id,
             transObject.type,
             transObject.userid,
@@ -68,6 +69,7 @@ class Transaction {
         const key = 'transaction:' + this._transModel.id;
         return await hmsetAsync([
             key,
+            'timestamp', this._transModel.timestamp,
             'transaction_id', this._transModel.id,
             'producer_id', this._transModel.producerId,
             'type', this._transModel.type,

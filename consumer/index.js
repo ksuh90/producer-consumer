@@ -1,6 +1,6 @@
-const server = require('./server');
+const server = require('./lib/server');
 const eventEmitter = require('events');
-const consumer = require('./consumer');
+const consumer = require('./lib/consumer');
 
 // The event emitter for transaction update for socket.io to listen in.
 const ee = new eventEmitter();

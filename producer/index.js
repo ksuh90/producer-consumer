@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const winston = require('winston');
 const redis = require('redis');
 const redisClient = redis.createClient(process.env.REDIS_URL);
 const { promisify } = require('util');
@@ -17,18 +18,19 @@ const produce = async function() {
     let channel = await createChannel(connection);
     while (1) {
         if (parseInt(await getAsync('producer_mode'))) {
+            // producer ON
             if (!channel) {
                 channel = await createChannel(connection);
             }
-            const n = randInterval(1, 6);
             const payload = createTransaction();
             await channel.sendToQueue(
                 process.env.QUEUE_NAME,
                 Buffer.from(JSON.stringify(payload))
             );
             
-            await sleep(n * 1000);
+            await sleep(randInterval(1, 6) * 1000);
         } else {
+            // producer OFF
             if (channel) {
                 channel.close();
                 console.log('[User balances]');

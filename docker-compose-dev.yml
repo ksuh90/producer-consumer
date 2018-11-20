@@ -1,0 +1,17 @@
+version: '2.1'
+
+services:
+
+    producer:
+        volumes:
+            - producer-sync:/opt/app:nocopy
+    
+    consumer:
+        volumes:
+            - consumer-sync:/opt/app:nocopy
+
+volumes:
+    producer-sync:
+        external: true
+    consumer-sync:
+        external: true

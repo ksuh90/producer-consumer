@@ -35,8 +35,6 @@ services:
         restart: always
         build:
             context: ./producer
-        volumes:
-            - producer-sync:/opt/app:nocopy
         networks:
             - app-network
         environment:
@@ -53,8 +51,6 @@ services:
         restart: always
         build:
             context: ./consumer
-        volumes:
-            - consumer-sync:/opt/app:nocopy
         networks:
             - app-network
         ports:
@@ -74,8 +70,4 @@ networks:
         driver: bridge
 
 volumes:
-    producer-sync:
-        external: true
-    consumer-sync:
-        external: true
     cloudant:

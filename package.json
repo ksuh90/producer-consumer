@@ -1,0 +1,20 @@
+{
+  "name": "producer-consumer",
+  "version": "1.0.0",
+  "description": "A distributed producer/consumer system.",
+  "main": "index.js",
+  "dependencies": {
+    "@cloudant/couchbackup": "^2.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/ksuh90/producer-consumer.git"
+  },
+  "author": "K Suh",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/ksuh90/producer-consumer#readme"
+}

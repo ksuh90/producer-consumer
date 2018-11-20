@@ -1,6 +1,7 @@
 # producer-consumer
 
 ## How to run
+Prerequisite: Docker, docker-compsoe
 1. Clone the repository 
     ```
     $ git clone https://github.com/ksuh90/producer-consumer.git

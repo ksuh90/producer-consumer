@@ -16,7 +16,9 @@ const produce = async function() {
     const controller = new transController(db);
 
     while (1) {
-        const config = await db.get('config');
+ 
+        const config = await db.get('config').catch(() => { return { mode: 0 }});
+        
         if (config.mode) {
             // producer ON
             if (!channel) {
@@ -40,7 +42,7 @@ const produce = async function() {
                 channel.close();
                 console.log('[User balances]');
                 for (u in users) {
-                    const balance = await controller.getUserBalance(users[u]);
+                    const balance = await controller.getUserBalance(users[u]).catch(() => { return null; });
                     if (balance !== null) {
                         console.log('%s: %s', users[u], balance);
                     }

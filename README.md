@@ -7,6 +7,7 @@ Prerequisite: Docker, docker-compsoe
     $ git clone https://github.com/ksuh90/producer-consumer.git
     ```
 2. From the root of the repository, run ```sh start.sh```
+    - (Optional) To run with syncing, use the docker-sync-stack command instead of the docker-compose command in ```start.sh```
 3. Once all the containers are running, initialize the database with ```sh init-db.sh```
 
 ## Features
